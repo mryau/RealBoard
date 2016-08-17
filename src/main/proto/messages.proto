@@ -1,0 +1,33 @@
+package chat;
+
+option java_package = "me.sivkov.messages";
+option java_outer_classname = "MsgProtos";
+
+message ChatMessage {
+    required string msg = 1;
+    optional string reply_to = 2;
+}
+
+message AuthMessage {
+    required string login = 1;
+    optional string passwd = 2;
+}
+
+message CmdMessage {
+    required string cmd = 1;
+    optional map<string, string> data = 2;
+    extensions 100 to 999;
+}
+
+message SysMessage {
+    required string msg = 1;
+}
+
+message Envelope {
+    optional string to = 1;
+    optional string from = 2;
+    optional SysMessage err = 3;
+    optional AuthMessage auth = 4;
+    optional ChatMessage chat = 5;
+    optional CmdMessage cmd = 6;
+}
