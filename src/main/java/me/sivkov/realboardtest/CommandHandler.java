@@ -5,6 +5,7 @@
  */
 package me.sivkov.realboardtest;
 
+import java.util.function.Function;
 import me.sivkov.messages.CmdMessage;
 import me.sivkov.messages.Envelope;
 
@@ -15,5 +16,5 @@ import me.sivkov.messages.Envelope;
 public interface CommandHandler {
     public String getName();
     public String getDescription();
-    public boolean handleCmdMessage(final CmdMessage message, EnvelopeHandler eh);
+    public boolean handleCmdMessage(final CmdMessage message, Function<Envelope, Void> directReply);
 }

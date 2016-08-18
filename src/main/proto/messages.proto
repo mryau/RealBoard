@@ -24,8 +24,8 @@ message SysMessage {
 }
 
 message Envelope {
-    optional string to = 1;
-    optional string from = 2;
+    optional string from = 1;
+    optional string to = 2;
     optional SysMessage err = 3;
     optional AuthMessage auth = 4;
     optional ChatMessage chat = 5;

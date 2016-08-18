@@ -9,6 +9,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.sivkov.messages.ChatMessage;
@@ -71,6 +72,8 @@ public class RawTcpProtocolHandler implements ProtocolHandler {
                     this.handleWrite(key);
             } catch (IOException e) {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, e);
+                User u = (User)key.attachment();
+                User.dropUser(u);
                 key.cancel();
             }
         }
@@ -97,7 +100,7 @@ public class RawTcpProtocolHandler implements ProtocolHandler {
                 b.clear();
             u.markReadOnly();
             ch.shutdownInput();
-            envelopeHandler.handle(MessageUtils.createSysMessage("User " + u + " moderated to readonly mode for spam activity"));
+            envelopeHandler.handle(MessageUtils.createSysMessage("User " + u + " moderated to readonly mode for spam activity"), null);
             return;
         }
         buf.clear();
@@ -120,8 +123,15 @@ public class RawTcpProtocolHandler implements ProtocolHandler {
                             ByteBuffer[] msg = MessageUtils.serializeEnvelope(welcome);
                             sendMessageToUser(key, u, msg);
                         }
-                    } else
-                        envelopeHandler.handle(env);
+                    } else {
+                        Function<Envelope, Void> directReply = e -> {
+                            ByteBuffer[] msg = MessageUtils.serializeEnvelope(e);
+                            sendMessageToUser(key, u, msg);
+                            return null;
+                        };
+                    
+                        envelopeHandler.handle(env, directReply);
+                    }
                 }
             }
         }

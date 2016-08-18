@@ -5,7 +5,9 @@
  */
 package me.sivkov.realboardtest;
 
+import java.util.function.Function;
 import me.sivkov.messages.CmdMessage;
+import me.sivkov.messages.Envelope;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -29,9 +31,10 @@ public class HelpCommandHandler implements CommandHandler {
     }
 
     @Override
-    public boolean handleCmdMessage(CmdMessage message, EnvelopeHandler eh) {
+    public boolean handleCmdMessage(final CmdMessage message, Function<Envelope, Void> directReply) {
         if (message.getCmd().equalsIgnoreCase("/help") || message.getCmd().equalsIgnoreCase("/?")) {
-            MessageUtils.createSysMessage(help);
+            Envelope re = MessageUtils.createSysMessage(help);
+            directReply.apply(re);
             return true;
         }
         return false;

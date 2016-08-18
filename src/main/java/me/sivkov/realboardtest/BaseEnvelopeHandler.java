@@ -12,6 +12,7 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Function;
 import me.sivkov.messages.Envelope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -41,7 +42,7 @@ public class BaseEnvelopeHandler implements EnvelopeHandler, EnvelopeStorage {
     }
 
     @Override
-    public boolean handle(Envelope e) {
+    public boolean handle(Envelope e, Function<Envelope, Void> directReply) {
         boolean result = true;
         parse:
         do {
@@ -55,7 +56,7 @@ public class BaseEnvelopeHandler implements EnvelopeHandler, EnvelopeStorage {
             }
             if (e.getCmd() != null) {
                 for (CommandHandler c : commandHandlers) {
-                    if (c.handleCmdMessage(e.getCmd(), this))
+                    if (c.handleCmdMessage(e.getCmd(), directReply))
                         break parse;
                 }
                 result = false;

@@ -10,6 +10,8 @@ import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
 import java.nio.ByteBuffer;
 import me.sivkov.messages.AuthMessage;
+import me.sivkov.messages.ChatMessage;
+import me.sivkov.messages.CmdMessage;
 import me.sivkov.messages.Envelope;
 import me.sivkov.messages.SysMessage;
 
@@ -33,6 +35,22 @@ public class MessageUtils {
         SysMessage s = new SysMessage(msg);
         Envelope e = new Envelope();
         e.setErr(s);
+        return e;
+    }
+
+    public static final Envelope createChatMessage(String from, String msg) {
+        ChatMessage s = new ChatMessage(msg);
+        Envelope e = new Envelope();
+        e.setFrom(from);
+        e.setChat(s);
+        return e;
+    }
+
+    public static final Envelope createCmdMessage(String from, String msg) {
+        CmdMessage s = new CmdMessage(msg);
+        Envelope e = new Envelope();
+        e.setFrom(from);
+        e.setCmd(s);
         return e;
     }
 

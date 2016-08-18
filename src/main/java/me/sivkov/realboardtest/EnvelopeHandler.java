@@ -7,6 +7,7 @@ package me.sivkov.realboardtest;
 
 import java.util.List;
 import java.util.Queue;
+import java.util.function.Function;
 import me.sivkov.messages.Envelope;
 
 /**
@@ -15,5 +16,5 @@ import me.sivkov.messages.Envelope;
  */
 public interface EnvelopeHandler {
     public List<Envelope> getHistorySnapshot();
-    public boolean handle(Envelope e);
+    public boolean handle(Envelope e, Function<Envelope, Void> directReply);
 }
